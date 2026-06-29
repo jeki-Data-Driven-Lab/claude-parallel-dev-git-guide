@@ -892,7 +892,7 @@ footer .stamp{
       <a href="#why">背景</a>
       <a href="#parallel">並列開発</a>
       <a href="#flow">基本フロー</a>
-      <a href="#pitfalls">事故集</a>
+      <a href="#pitfalls">注意点</a>
       <a href="#hitl">コラム</a>
       <a href="#resources">学習</a>
       <a href="#glossary">用語</a>
@@ -904,7 +904,7 @@ footer .stamp{
      HERO
 ============================================ -->
 <header class="hero">
-  <div class="hero-stamp">Internal &middot; v1.0 &middot; 2026.06</div>
+  <div class="hero-stamp">Internal &middot; v2.0 &middot; 2026.06</div>
   <div class="wrap hero-inner">
     <div>
       <span class="eyebrow">Memo / Engineering Practices</span>
@@ -1082,15 +1082,17 @@ footer .stamp{
 
     <div class="split">
       <div class="prose">
-        <p>厄介なのは、<strong>「コンフリクトが出る」こと自体は事故ではない</strong> 点です。
-        並列で開発していれば、ある程度は必ず起きます。問題は「気づかずに片方を消してしまう」「マージしたつもりで反映されていない」といった、
-        <strong>本人が気付かないまま誰かの仕事が消える</strong>パターン。</p>
+        <p>厄介なのは、<strong>「コンフリクトが出る」こと自体は事故ではない</strong>点です。
+        並列で開発していれば、ある程度は必ず起きます。ですから身も蓋もない結論を先に書きます ──
+        <strong>コンフリクトを完全に防ぐ努力に時間を使うより、出てきたコンフリクトと丁寧に向き合うことに時間を使ってください。</strong></p>
 
-        <p>Claude にマージや解決をお願いするときは、必ず<strong>「衝突したら止まって、人間に聞いて」</strong>と前置きを入れるのが安全です。
-        Claudeは賢いので、放っておくと「いい感じに」解決してしまうことがあります。それが本当に意図通りかは別の話です。</p>
+        <p>一番危ないのは、<strong>「なんかよくわかんないけど、こっちっぽい」で済ませてしまうこと</strong>。
+        これで誰かの仕事が静かに消えます。わからなければ、わかるまで Claude に
+        <strong>「これは何と何が衝突していて、どちらを残すとどうなるのか、私が判断できるように説明して」</strong>と頼んでください。
+        納得してから解消する。これだけで、ほとんどの事故は防げます。</p>
 
-        <p>そして実は、コンフリクト対策の本丸は<strong>「衝突を上手に解く」ことではなく「そもそも衝突しにくい仕事の切り方をする」</strong>こと。
-        次の章の <b>worktree</b> がそれです。</p>
+        <p>そして並列開発の段取りとしては、そもそも作業フォルダを物理的に分ける <b>worktree</b> という仕組みが、
+        衝突の<u>発生頻度自体</u>を下げてくれます。次の章で扱います。</p>
       </div>
 
       <figure class="figure-paper">
@@ -1159,10 +1161,13 @@ footer .stamp{
     </div>
 
     <div class="worktree-board">
-      <h3>Claudeに「いい感じに分けて」と頼むだけで、こうなります。</h3>
+      <h3>並列の本物は、ターミナルを並べる × 机を分ける、の合わせ技。</h3>
       <p style="max-width:62ch; color: rgba(239,246,255,.85); font-size:15px; line-height:1.85;">
-        コマンドは Claude が裏でやってくれます。私たちが意識すべきは「<u>1Claude = 1机 = 1ブランチ</u>」というルールだけ。
-        机が3つに分かれていれば、テーブルの取り合いは起きません。
+        ここで一つ誤解を解いておきます。
+        <strong>1つのターミナルで Claude を動かしたまま「並列でやって」と頼んでも、それは並列にはなりません</strong>。
+        Claude は1つのターミナルの中では、結局ブランチを切り替えながら順番に作業するだけだからです。<br><br>
+        本物の並列にする条件は2つ。<u>ターミナルを複数開く</u>こと、そして<u>各ターミナルで worktree（作業フォルダ）を別々に持つ</u>こと。
+        この2つが揃って初めて、3つの机が物理的に分かれた状態になります。
       </p>
 
       <div class="worktree-grid">
@@ -1187,8 +1192,22 @@ footer .stamp{
       </div>
     </div>
 
+    <div style="margin-top: 30px; padding: 24px 26px; background: var(--paper); border: 1px solid var(--rule-soft);">
+      <div style="font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--amber); margin-bottom: 14px;">人間がやること / Claudeがやること</div>
+      <pre style="margin: 0; font-family: var(--f-mono); font-size: 13px; line-height: 1.9; color: var(--ink); overflow-x: auto;">ターミナル①  →  worktreeフォルダA  →  Claude① が feature/auth を担当
+ターミナル②  →  worktreeフォルダB  →  Claude② が feature/search を担当
+ターミナル③  →  worktreeフォルダC  →  Claude③ が chore/docs   を担当</pre>
+      <p style="margin: 14px 0 0; font-size: 14px; line-height: 1.78; color: var(--ink-soft);">
+        ↑ <strong>「ターミナルを開いて並べる」だけが人間の仕事</strong>。
+        worktree を切る、ブランチを作る、といった Git のコマンド自体は Claude が裏でやってくれます。
+      </p>
+    </div>
+
     <div class="prose" style="margin-top: 40px;">
-      <p>大事なのは、<strong>担当を「ファイル単位」で重ねない</strong>こと。
+      <p>覚えるルールは一つ。<strong>「1ターミナル ＝ 1机（worktree）＝ 1Claude ＝ 1ブランチ」を1対1で揃える</strong>こと。
+      この比率が崩れた瞬間 ── 同じフォルダで2つのClaudeを動かす、同じブランチを2つの机で開く ── にコンフリクトや事故が一気に増えます。</p>
+
+      <p>もう一つだけコツを挙げるなら、<strong>担当を「ファイル単位」で重ねない</strong>こと。
       同じ <span class="kbd">package.json</span> のような共有ファイルを、3つの机が同時に書こうとすれば、結局合流時にぶつかります。
       Claude には<strong>「触るフォルダの範囲」を最初に指定する</strong>のが事故率を一気に下げるコツです。</p>
     </div>
@@ -1234,8 +1253,8 @@ footer .stamp{
       <div class="step">
         <div class="step-num">STEP 04</div>
         <h4>合流させる<br><small style="font-family:var(--f-mono);font-size:11px;color:var(--ink-mute);letter-spacing:.12em">— MERGE</small></h4>
-        <p>OKが出たら本体（main）に取り込む。原則として、人間がレビューしてからボタンを押すのが安全。</p>
-        <div class="say">「PRが承認されたら、<br>mainにマージして、<br>ブランチは削除しておいて」</div>
+        <p>PRが上がったらレビュー専門のAgentに読ませて、クリティカルな指摘を潰す。問題がなければマージ。人間が1行ずつ追うのではなく、Agentに何をどこまで見させるかを設計する側に時間を使う。</p>
+        <div class="say">「このPR、レビュー専門の<br>Agentに渡してチェックさせて。<br>クリティカルな指摘がなければ<br>mainにマージして、<br>ブランチも削除して」</div>
       </div>
     </div>
   </div>
@@ -1247,12 +1266,12 @@ footer .stamp{
 <section id="pitfalls" class="tint">
   <div class="wrap">
     <div class="section-head">
-      <div class="section-num">05 / 事故集</div>
+      <div class="section-num">05 / 注意ポイント</div>
       <div>
-        <h2 class="section-title">初心者がやりがちな、6つの危険操作。</h2>
+        <h2 class="section-title">並列開発で、<br>特に気をつけたい6つのこと。</h2>
         <p class="section-lede">
-          ここに挙げるのは、いずれも実際に「やってしまうと作業が消える / チームが止まる」級の事故です。
-          Claudeに頼むときも、<strong>「これは絶対にしないで」と最初に明記する</strong>とリスクが大幅に下がります。
+          どれも事故に直結しがちな項目ですが、知っていれば避けられるものばかりです。
+          Claudeに作業を頼むときも、<strong>「ここは慎重にお願い」と一言添えておく</strong>とリスクが大きく下がります。
         </p>
       </div>
     </div>
@@ -1261,54 +1280,54 @@ footer .stamp{
       <div class="pit">
         <div class="pit-no">01</div>
         <div>
-          <h4>main ブランチで直接作業する</h4>
-          <p>本番に直結する原本に、いきなり下書きを上書きする状態。一発で本番が壊れる可能性があります。</p>
-          <div class="fix">必ず先にブランチを切る。Claude に「mainで直接編集しないで」と一言入れる。</div>
+          <h4>main ブランチで直接作業しないように気をつける</h4>
+          <p>本番に直結する原本に、いきなり下書きを上書きしてしまう状態。最悪、一発で本番が壊れることがあります。</p>
+          <div class="fix">最初にブランチを切る習慣をつける。Claudeにも「mainで直接編集しないで」と最初に伝えておくとほぼ防げる。</div>
         </div>
       </div>
 
       <div class="pit">
         <div class="pit-no">02</div>
         <div>
-          <h4>force push（強制的に上書き保存）</h4>
-          <p>たとえると、他の人が共有ドキュメントに書き込んだ履歴ごと、自分のファイルで上書きする操作。チームの作業が静かに消えます。</p>
-          <div class="fix">使う必要があるかを人間に必ず確認させる。Claudeに「forceは禁止」とCLAUDE.mdに書いておく。</div>
+          <h4>force push（強制的に上書き保存）は特に慎重に</h4>
+          <p>たとえると、他の人が共有ドキュメントに書き込んだ履歴ごと、自分のファイルで上書きする操作。チームの作業が静かに消えることがあります。</p>
+          <div class="fix">本当に必要か必ず一度立ち止まる。Claudeには「force pushは慎重に」とCLAUDE.mdに書いておく。</div>
         </div>
       </div>
 
       <div class="pit">
         <div class="pit-no">03</div>
         <div>
-          <h4>同じファイルを複数Claudeが同時編集</h4>
-          <p>worktree で机を分けても、同じファイルを2台が触れば結局衝突します。設定ファイルや型定義は特に危険。</p>
-          <div class="fix">最初に「あなたが触るフォルダはここまで」と範囲を明確に伝える。共有ファイルは担当を1台に限定。</div>
+          <h4>同じファイルを複数Claudeが同時に触らないようにする</h4>
+          <p>worktreeで机を分けても、同じファイルを2台が触れば結局衝突します。設定ファイルや型定義は特に注意したい場所。</p>
+          <div class="fix">最初に「あなたが触るフォルダはここまで」と範囲を明確に伝える。共有ファイルは担当を1台に絞っておく。</div>
         </div>
       </div>
 
       <div class="pit">
         <div class="pit-no">04</div>
         <div>
-          <h4>長いブランチを放置する</h4>
-          <p>1週間以上分岐したままにすると、本体が先に進みすぎてマージ時の衝突が指数関数的に増えます。</p>
-          <div class="fix">ブランチは「3〜5日以内にマージ」を目安に短命に保つ。長引くなら一度本体を取り込み直す。</div>
+          <h4>ブランチを長く放置しないようにする</h4>
+          <p>1週間以上分岐したままにしておくと、本体が先に進みすぎてマージ時の衝突が指数関数的に増えていきます。</p>
+          <div class="fix">ブランチは「3〜5日以内にマージ」を目安に短命に保つ。長引きそうなら、一度本体を取り込み直す。</div>
         </div>
       </div>
 
       <div class="pit">
         <div class="pit-no">05</div>
         <div>
-          <h4>Claudeの「ちょっと整理しといた」を信じる</h4>
-          <p>頼んでいない関数の削除、import の整理、設定の書き換えが紛れ込むことがあります。レビューをせずにマージすると気づけません。</p>
-          <div class="fix">PRの差分は、必ず人間が眺める。「想定外の変更があれば指摘して」と明示的に頼む。</div>
+          <h4>Claudeの「ちょっと整理しといた」を鵜呑みにしない</h4>
+          <p>頼んでいない関数の削除、importの整理、設定の書き換えが紛れ込むことがあります。レビューをかけずにマージすると気づけません。</p>
+          <div class="fix">PRの差分は、書いたのとは別のサブエージェントや別モデルにレビューさせる。「想定外の変更があれば指摘して」と明示的に頼む。</div>
         </div>
       </div>
 
       <div class="pit">
         <div class="pit-no">06</div>
         <div>
-          <h4>ブランチを消す前に確認しない</h4>
+          <h4>ブランチを消す前に確認するクセをつける</h4>
           <p>「もうマージしたから」と削除したブランチに、実は他のClaudeの未マージの差分が残っていた、というケース。</p>
-          <div class="fix">削除前に「未マージの差分がないか確認して」と一言。GitHub のUI上で安全に削除するのが基本。</div>
+          <div class="fix">削除前に「未マージの差分がないか確認して」と一言。GitHubのUI上で安全に削除するのが基本。</div>
         </div>
       </div>
     </div>
@@ -1327,7 +1346,10 @@ footer .stamp{
         <p class="section-lede">
           Pull Request（プルリクエスト、PR）という言葉に身構えがちですが、
           中身は <strong>「この変更、本体に取り込んでも大丈夫ですか？」</strong> という1枚の提案書です。
-          Google ドキュメントの「提案モード」と本質的に同じ。誰かがレビューして OK を押すまで、本体は変わりません。
+          Google ドキュメントの「提案モード」と本質的に同じ。
+          ただし読んで判断する側は、人間とは限りません。
+          <strong>JDDLでは、最初に差分を読むのはレビュー専門の別Agent</strong>。
+          人間は、その指摘の重要度を判断する側に回ります。
         </p>
       </div>
     </div>
@@ -1361,12 +1383,12 @@ footer .stamp{
           <span>レビューする人が3分で文脈を掴めるよう、本文に「目的」「確認ポイント」だけは入れる。</span>
         </li>
         <li>
-          <b>差分（diff）は人間が見る</b>
-          <span>追加された赤緑の行を、ざっとでも目を通す。Claudeが余計なファイルを触っていないか確認できる。</span>
+          <b>差分は、別の頭にレビューさせる</b>
+          <span>PRを書いたClaudeとは別のサブエージェントや別モデルに、差分を渡して読ませる。同じ頭で書いて見直すより、第三者の視点を一度挟む方が見落としが減る。</span>
         </li>
         <li>
-          <b>OKが出てからマージ</b>
-          <span>本番に反映されるのはここから。マージを押す = 「責任を持って取り込みます」のサイン。</span>
+          <b>クリティカルな指摘が潰れたらマージ</b>
+          <span>本番に反映されるのはここから。マージを押す ＝「責任を持って取り込みます」のサイン。レビューAgentが上げた指摘の重要度を判断するのが、人間の出番。</span>
         </li>
       </ul>
     </div>
@@ -1639,7 +1661,7 @@ footer .stamp{
       </p>
     </div>
     <div class="stamp">
-      Rev. 1.0 &middot; CC BY-NC &middot; JDDL
+      Rev. 2.0 &middot; CC BY-NC &middot; JDDL
     </div>
   </div>
 </footer>
