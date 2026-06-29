@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Claude Codeで並列開発するときに、Gitで気をつけたい話 — JDDL 社内資料</title>
-<meta name="description" content="複数のAIが同じリポジトリを同時に書き換える時代の、Gitとの付き合い方。非エンジニア向けにやさしく解説した社内共有資料。">
+<title>Claude Codeで並列開発するときに、Gitで気をつけたい話</title>
+<meta name="description" content="複数のAIが同じリポジトリを同時に書き換える時代の、Gitとの付き合い方。非エンジニアにもやさしく解説した、並列開発の独習ガイド。">
+<meta name="robots" content="noindex,nofollow">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -886,7 +887,7 @@ footer .stamp{
   <div class="wrap row">
     <div class="brand">
       <span class="brand-mark" aria-hidden="true"></span>
-      <span>JDDL / Internal Memo &middot; 並列開発 × Git</span>
+      <span>Internal Memo &middot; 並列開発 × Git</span>
     </div>
     <nav class="topnav" aria-label="目次">
       <a href="#why">背景</a>
@@ -916,7 +917,7 @@ footer .stamp{
       <p class="hero-sub">
         複数のAIが同じリポジトリを同時に書き換える時代。
         ブランチ、コンフリクト、PR、マージ ──
-        言葉だけ聞くと身構えるそれらを、現場の判断ができる粒度で噛み砕いた、JDDL社内の独習資料です。
+        言葉だけ聞くと身構えるそれらを、現場の判断ができる粒度で噛み砕いた、社内向けの独習資料です。
       </p>
       <div class="hero-meta">
         <span><b>対象</b>非エンジニア / 入門〜初級</span>
@@ -1349,7 +1350,7 @@ footer .stamp{
           中身は <strong>「この変更、本体に取り込んでも大丈夫ですか？」</strong> という1枚の提案書です。
           Google ドキュメントの「提案モード」と本質的に同じ。
           ただし読んで判断する側は、人間とは限りません。
-          <strong>JDDLでは、最初に差分を読むのは「レビュー専門のAgent」（PRを書いたのとは別のサブエージェントや別モデル）</strong>。
+          <strong>弊社では、最初に差分を読むのは「レビュー専門のAgent」（PRを書いたのとは別のサブエージェントや別モデル）</strong>。
           人間は、そのAgentが上げた指摘の重要度を判断する側に回ります。
         </p>
       </div>
@@ -1458,7 +1459,7 @@ footer .stamp{
         目指したいのは <strong>「人間を減らす」ではなく「人間を、本当に判断が必要な瞬間にだけ呼ぶ」</strong>こと。
         毎回呼ばれていたら、エージェントを使う意味は半分になります。
         その代わり、呼ばれた時に判断できるよう、私たちは Git・PR・テスト・権限の<u>枠組みづくり側</u>に時間を投資する ──
-        これが、JDDLとしての並列開発の流儀にしていきたい考え方です。
+        これが、弊社としての並列開発の流儀にしていきたい考え方です。
       </p>
     </div>
   </div>
@@ -1655,14 +1656,14 @@ footer .stamp{
 <footer>
   <div class="wrap">
     <div>
-      <h3>JDDL — Internal Engineering Memo</h3>
+      <h3>Internal Engineering Memo</h3>
       <p>
         本資料は社内勉強会の補助資料です。気付き・誤り・更新案があれば、Issue または PR で歓迎します。<br>
-        Documentation by Tomoaki Hirono &middot; Drafted with Claude Code &middot; 2026.06
+        Drafted with Claude Code &middot; 2026.06
       </p>
     </div>
     <div class="stamp">
-      Rev. 2.0 &middot; CC BY-NC &middot; JDDL
+      Rev. 2.1 &middot; CC BY-NC
     </div>
   </div>
 </footer>
